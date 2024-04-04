@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--    选择状态情况下-->
+    <item android:state_checked="true">
+        <layer-list>
+            <item android:drawable="@drawable/b_" android:height="27.13dp" android:width="43.03dp"></item>
+        </layer-list>
+    </item>
+    <!--    经常情况-->
+    <item>
+        <layer-list>
+            <item android:drawable="@drawable/b" android:height="27.13dp" android:width="43.03dp"></item>
+        </layer-list>
+    </item>
+
+</selector>

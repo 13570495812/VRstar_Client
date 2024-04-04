@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/bg">
+    <LinearLayout
+        android:id="@+id/ll_set_big_one"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+<!--        <Button-->
+<!--            android:id="@+id/share_Screen"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:textSize="20dp"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Share screen"-->
+<!--            android:textColor="@color/white"-->
+<!--            />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_marginBottom="0dp">
+            <Button
+                android:id="@+id/ll_set_wifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/bg"
+                android:onClick="SaveServerIP"
+                android:text="CHECK WIFI"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:layout_marginLeft="30dp"></Button>
+            <Button
+                android:id="@+id/ll_set_restart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/bg"
+                android:onClick="SaveServerIP"
+                android:text="RESTART"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:layout_marginLeft="30dp"></Button>
+        </LinearLayout>
+<!--        <TextView-->
+<!--            android:id="@+id/test"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:text="俄罗斯世界杯乌拉圭VS法国"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="18sp"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/detail_split_line1" />-->
+
+        <RadioGroup
+            android:id="@+id/rg_call_voice_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/test">
+            <RadioButton
+                android:id="@+id/English"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="2dp"
+                android:background="@null"
+                android:checked="true"
+                android:drawablePadding="8dp"
+                android:text="English"
+                android:textColor="@drawable/selector_main_rb_text"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/china"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="2dp"
+                android:background="@null"
+                android:textColor="@drawable/selector_main_rb_text"
+                android:drawablePadding="8dp"
+                android:text="中文"
+                android:textSize="18sp"
+                />
+        </RadioGroup>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_marginBottom="50dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginLeft="33dp"
+                android:textSize="17sp"
+                android:text="      IP:"/>
+
+            <EditText
+                android:id="@+id/ll_set_eTxtIP"
+                android:layout_width="144dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="4dp"
+                android:background="@drawable/bg_layout_border_edit"
+                android:textSize="17sp"
+                android:digits="0123456789."
+                android:ems="15"
+                android:inputType="text"
+                android:maxLength="15"
+                android:text=""
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/txtViewIP"
+                app:layout_constraintStart_toEndOf="@+id/txtViewIP"
+                app:layout_constraintTop_toTopOf="@+id/txtViewIP"
+                app:layout_constraintVertical_bias="0.818" />
+            <Button
+                android:id="@+id/ll_set_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/bg"
+                android:onClick="SaveServerIP"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:layout_marginLeft="30dp"></Button>
+
+            <!--<TextView
+                android:id="@+id/ll_set_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textColor="@color/white"
+                android:text="read"/>-->
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="18.45dp"
+                android:text="Password："/>
+            <EditText
+                android:id="@+id/ll_set_Password"
+                android:layout_width="143dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_layout_border_edit"
+                android:textColor="@color/white"
+                android:inputType="textPassword"/>
+            <Button
+                android:id="@+id/ll_set_determine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/bg"
+                android:onClick="SaveServerIP"
+                android:text="Send"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:layout_marginLeft="30dp"
+                />
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="50dp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_set_big_tow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:visibility="visible"
+        >
+<!--        android:visibility="gone" -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/ll_set_txtPicoSN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SN:                                  "
+                android:textColor="@android:color/holo_orange_dark"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/txtIP"
+                app:layout_constraintStart_toEndOf="@+id/txtIP"
+                app:layout_constraintTop_toTopOf="@+id/txtIP"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginLeft="33dp"
+                android:text=""/>
+            <TextView
+                android:id="@+id/ll_set_txtIP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="                   "/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="50dp"
+            android:paddingLeft="200dp"
+            android:paddingRight="200dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/mode_text_change"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="免费模式"
+                android:layout_weight="1"
+                android:layout_gravity="start"
+                android:textColor="@color/white"
+                android:textSize="25dp"
+                android:padding="5dp"/>
+            <Switch
+                android:id="@+id/sw_status"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:trackTint="@color/rod_4459"
+                app:thumbTintMode="multiply"
+                android:layout_gravity="end"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/ll_set_open"
+                android:textSize="28sp"
+                android:textColor="@color/teal_200"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="Enter Home"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/ll_set_back"
+                android:textSize="28sp"
+                android:textColor="@color/Bopen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quit Home"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/ll_show_open"
+                android:textSize="28sp"
+                android:textColor="@color/teal_200"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="打开商城"/>
+
+        </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="35dp">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                android:textSize="20sp"-->
+<!--                android:text="二维码"-->
+<!--                android:textColor="@color/white" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/ll_set_code_ImageView"-->
+<!--                android:layout_width="143dp"-->
+<!--                android:layout_height="143dp"-->
+<!--                android:gravity="center"-->
+<!--                android:inputType="text"/>-->
+
+<!--        </LinearLayout>-->
+
+    </LinearLayout>
+
+
+</LinearLayout>

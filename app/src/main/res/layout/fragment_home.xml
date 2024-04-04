@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:padding="7.5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Is the device online"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/l_top_Onlines"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="online"
+                android:textColor="@color/c_FFBD2F"
+                android:textSize="17sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/l_top_Online"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="online"
+                android:textColor="@color/c_FFBD2F"
+                android:textSize="17sp"
+                />
+
+
+            <TextView
+                android:id="@+id/home_refresh"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Refresh"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+<!--            <TextView-->
+<!--                android:id="@+id/ll_home_SN"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="SN:                           "-->
+<!--                android:textColor="@color/white" />-->
+
+            <TextView
+                android:id="@+id/ll_home_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantity:                           "
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/Free_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:visibility="visible">
+            <TextView
+                android:id="@+id/text_mode_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="免费模式"
+                android:textColor="@color/c_FFBD2F"
+                android:textSize="22sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/charge_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="Trial time:    "
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/time_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="00:00:00"
+                android:textColor="@color/c_FFBD2F"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RadioGroup
+                android:id="@+id/ll_home_radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/ll_home_choose_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="All"
+                    android:visibility="gone"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+                <RadioButton
+                    android:visibility="gone"
+                    android:id="@+id/ll_home_choose_Hotlist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="HotList"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+                <RadioButton
+                    android:visibility="gone"
+                    android:id="@+id/ll_home_choose_Movement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="Sports"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+                <RadioButton
+                    android:visibility="gone"
+                    android:id="@+id/ll_home_choose_Shoot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="Shooting"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+                <RadioButton
+                    android:visibility="gone"
+                    android:id="@+id/ll_home_choose_Strategy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="Strategy"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+                <RadioButton
+                    android:visibility="gone"
+                    android:id="@+id/ll_home_choose_Adventure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="Adventure"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+                <RadioButton
+                    android:visibility="gone"
+                    android:id="@+id/ll_home_choose_Leisure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="Leisure"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+                <RadioButton
+                    android:visibility="gone"
+                    android:id="@+id/ll_home_choose_Plot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="Plot"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+                <RadioButton
+                    android:visibility="gone"
+                    android:id="@+id/ll_home_choose_Puzzle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="Puzzle"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+                <RadioButton
+                    android:visibility="gone"
+                    android:id="@+id/ll_home_choose_Other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:button="@null"
+                    android:gravity="center_horizontal"
+                    android:text="Others"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/selector_main_rb_text"
+                    android:textSize="18.5sp" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:background="@drawable/bj_left_one"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/flexbox_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:background="@drawable/bj_left_one"
+                app:flexDirection="row"
+                app:flexWrap="wrap"
+                app:justifyContent="flex_start"
+                app:alignContent="flex_start"
+                app:alignItems="flex_start"
+                >
+            </com.google.android.flexbox.FlexboxLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
+</LinearLayout>
