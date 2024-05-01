@@ -227,6 +227,12 @@ public class MainActivity extends AppCompatActivity {
     private String wifi_name;
     private Read_coin_file file_mode;
 
+    private  static final String C1_="CLOSE1";
+    private  static final String C2_="CLOSE2";
+    private  static final String C3_="CLOSE3";
+    private  static final String UDPIP_="192.168.188.255";
+    private UdpTool udpTool;
+
     // 检查权限
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
          * 导入是否免费模式
          */
         file_mode = new Read_coin_file();
-
+        udpTool=new UdpTool(this);
         /**
          * 初始化
          */
@@ -282,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
          * 权限动态获取
          */
         checkPermission();
+
         /**
          * 获取服务器IP
          */
@@ -336,6 +343,12 @@ public class MainActivity extends AppCompatActivity {
 ////            myCountDownTimer = new MyCountDownTimer(Integer.parseInt(GetTime), 1000);
 ////            myCountDownTimer.start();
 //        }
+        /**
+         * 发送udp
+         */
+        UDPstartC1(C1_,UDPIP_);
+        UDPstartC2(C2_,UDPIP_);
+        UDPstartC3(C3_,UDPIP_);
     }
 
     /**
@@ -345,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             String[] strArray = (String[]) msg.obj;
-            Log.e(TAG,"==="+msg.what);
+//            Log.e(TAG,"==="+msg.what);
             switch (msg.what) {
                 case 0:
                     if (!isGameing) {
@@ -356,8 +369,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case 1:  //** 上线 *//*
-                    Log.d(TAG,"--------------------------------1 我在线------------------"+isGameing);
-                    Log.d(TAG,"--------------------------------1 我在线------------------"+mainActivity.socketConnect.isRegister);
+//                    Log.d(TAG,"--------------------------------1 我在线------------------"+isGameing);
+//                    Log.d(TAG,"--------------------------------1 我在线------------------"+mainActivity.socketConnect.isRegister);
 //                    if (!mainActivity.socketConnect.isRegister) {
                         try {
                             mainActivity.QRcontent = strArray[1];
@@ -366,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
                             bf.OnlineHome();
 //                            mainActivity.SendMessage("1", true);
                             bf.quantityHome(); //电量
-                            Log.d(TAG,"--------------------------------我改咕咕咕咕------------------"+mainActivity.socketConnect.isRegister);
+//                            Log.d(TAG,"--------------------------------我改咕咕咕咕------------------"+mainActivity.socketConnect.isRegister);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -409,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
                         mainActivity.SendMessage("4", true);
                         one = true;
                     } catch (Exception e) {
-                        AppContext.restartApp();
+//                        AppContext.restartApp();
                     }
                     break;
                 case 5://点击游戏打开
@@ -439,7 +452,7 @@ public class MainActivity extends AppCompatActivity {
 //                        Log.d(TAG,"--------------------------------6 重啓 ------------------"+isGameing);
                         SharedPreferencesUtil.getInstance(getApplicationContext()).setInt(SharedName.game_times.getValue(), CountDownGameTimes);
                     mainActivity.SendMessage("6", true);
-                    AppContext.restartApp();
+//                    AppContext.restartApp();
                     break;
                 case 7://關機
                     if (strArray[1].equals("Shutdown")) {
@@ -511,7 +524,9 @@ public class MainActivity extends AppCompatActivity {
                         Thread.sleep(1000 * 5);
                     }
                     Thread.sleep(3000);
+
                     mainActivity.getSN_Quantity();
+
                 } catch (Exception e) {
                 }
             }
@@ -612,6 +627,7 @@ public class MainActivity extends AppCompatActivity {
 //                    wifiConfig = ToBServiceHelper.getInstance().getServiceBinder().pbsGetAutoConnectWiFiConfig(0);
 //                    Log.e(TAG,"wifi==========="+wifiConfig);
                 } catch (RemoteException e) {
+
                 }
 //                txtPicoSN.setText("SN:" + SN_Number);
 //                txtQUANTITYInfo.setText("Quantity:" + Quantity_Number);
@@ -625,11 +641,31 @@ public class MainActivity extends AppCompatActivity {
                 /**
                  *  懒加载
                  */
-//                setViewEventListener();
+
             }
         });
     }
 
+    private void UDPstartC1(String  str,String ip) {
+        if (ip!=null){
+            udpTool.sendMessage(str,ip);
+        }else {
+//            Toast.makeText(MainActivity.this, "请输入对方ip和端口", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void UDPstartC2(String  str,String ip) {
+        if (ip!=null){
+            udpTool.sendMessage(str,ip);
+        }else {
+//            Toast.makeText(MainActivity.this, "请输入对方ip和端口", Toast.LENGTH_SHORT).show();
+        }
+    }    private void UDPstartC3(String  str,String ip) {
+        if (ip!=null){
+            udpTool.sendMessage(str,ip);
+        }else {
+//            Toast.makeText(MainActivity.this, "请输入对方ip和端口", Toast.LENGTH_SHORT).show();
+        }
+    }
     /**
      * 默认选择首页
      */
@@ -748,6 +784,7 @@ public class MainActivity extends AppCompatActivity {
 //                String GetTime = mCache.getAsString("TimeCache");
                 if(file_mode.ferr().equals("")){
                     starapps();
+
                 }
                 if(file_mode.ferr().equals("0")){
                     starapps();
@@ -756,7 +793,9 @@ public class MainActivity extends AppCompatActivity {
                     if (!isTime) {
                         showNormalDialog();
                     }else {
+
                         starapps();
+
 
                     }
                 }
@@ -1241,7 +1280,7 @@ private void starapps(){
             ToBServiceHelper.getInstance().getServiceBinder().pbsControlSetDeviceAction(PBS_DeviceControlEnum.DEVICE_CONTROL_REBOOT, new IIntCallback.Stub() {
                 @Override
                 public void callback(int i) throws RemoteException {
-                    Log.e(TAG, "=========关机==========" + i);
+//                    Log.e(TAG, "=========关机==========" + i);
                 }
 
                 @Override
@@ -1564,38 +1603,47 @@ private void starapps(){
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        Log.d(TAG, "onStart");
+        Log.e(TAG, "onStart");
+        /**
+         * 发送udp
+         */
+        UDPstartC1(C1_,UDPIP_);
+        UDPstartC2(C2_,UDPIP_);
+        UDPstartC3(C3_,UDPIP_);
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        Log.d(TAG, "onPostResume");
+        Log.e(TAG, "onPostResume");
+        UDPstartC1(C1_,UDPIP_);
+        UDPstartC2(C2_,UDPIP_);
+        UDPstartC3(C3_,UDPIP_);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause");
+        Log.e(TAG, "onPause");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-        Log.d(TAG, "onStop");
+        Log.e(TAG, "onStop");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "onRestart");
+        Log.e(TAG, "onRestart");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy");
+        Log.e(TAG, "onDestroy");
 
     }
 

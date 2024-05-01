@@ -3,13 +3,13 @@
     <!--    选择状态情况下-->
     <item  android:state_checked="true">
         <layer-list>
-            <item android:drawable="@drawable/a_" android:width="45.5dp" android:height="40dp"></item>
+            <item android:drawable="@drawable/a_" android:width="40.5dp" android:height="35dp"></item>
         </layer-list>
     </item>
     <!--    经常情况-->
     <item>
         <layer-list>
-            <item android:drawable="@drawable/a" android:width="45.5dp" android:height="40dp"></item>
+            <item android:drawable="@drawable/a" android:width="40.5dp" android:height="35dp"></item>
         </layer-list>
     </item>
 </selector>
