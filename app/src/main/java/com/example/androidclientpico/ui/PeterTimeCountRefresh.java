@@ -3,7 +3,7 @@ package com.example.androidclientpico.ui;
 import android.os.CountDownTimer;
 
 /**
- * Author:boshuai.li
+ * Author:aili
  * Time:2020/3/17   11:42
  * Description: 倒计时的工具类
  */

@@ -239,8 +239,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="50dp"
-            android:paddingLeft="200dp"
-            android:paddingRight="200dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/mode_text_change"

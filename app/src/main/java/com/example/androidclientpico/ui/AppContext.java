@@ -8,17 +8,17 @@ public class AppContext extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-       Thread.setDefaultUncaughtExceptionHandler(restartHandler); // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
+//       Thread.setDefaultUncaughtExceptionHandler(restartHandler); // 程序崩溃时触发线程  以下用来捕获程序崩溃异常
     }
     // 创建服务用于捕获崩溃异常
-    private Thread.UncaughtExceptionHandler restartHandler = new Thread.UncaughtExceptionHandler() {
-        public void uncaughtException(Thread thread, Throwable ex) {
-            if(MainActivity.mainActivity.socketConnect.isConnect)
-            {
-                restartApp();//发生崩溃异常时,重启应用
-            }
-        }
-    };
+//    private Thread.UncaughtExceptionHandler restartHandler = new Thread.UncaughtExceptionHandler() {
+//        public void uncaughtException(Thread thread, Throwable ex) {
+//            if(MainActivity.mainActivity.socketConnect.isConnect)
+//            {
+//                restartApp();//发生崩溃异常时,重启应用
+//            }
+//        }
+//    };
 
     public static void restartApp() {
         Intent intent = new Intent(instance, MainActivity.class);

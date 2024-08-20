@@ -3,14 +3,14 @@
     <!--    选择状态情况下-->
     <item  android:state_checked="true">
         <layer-list>
-            <item android:drawable="@drawable/c_" android:width="45.5dp" android:height="47dp"></item>
+            <item android:drawable="@drawable/c_" android:width="40.5dp" android:height="42dp"></item>
         </layer-list>
     </item>
     <!--    经常情况-->
 
     <item>
         <layer-list>
-            <item android:drawable="@drawable/c" android:width="45.5dp" android:height="47dp"></item>
+            <item android:drawable="@drawable/c" android:width="40.5dp" android:height="42dp"></item>
         </layer-list>
     </item>
 

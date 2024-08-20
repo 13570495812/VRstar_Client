@@ -43,6 +43,9 @@ public class SocketConnect {
             public void run() {
                 while (true) {
                     try {
+
+//                        Log.e("socekt",MainActivity.SERVER_IP);
+
                         socket = new Socket(MainActivity.SERVER_IP, MainActivity.SERVER_PORT);
                         InputStream inputStream = socket.getInputStream();
                         DataInputStream input = new DataInputStream(inputStream);
@@ -55,6 +58,7 @@ public class SocketConnect {
                                 String Msg = new String(b, 0, length, "UTF8");
                                 if (!Msg.contains("{") && !Msg.contains("}")) {
                                     String[] msgArray = Msg.split(";");
+//                                    Log.e("服务器",""+msgArray.length);
                                     String c= msgArray[0];
 
                                     String d= msgArray[1];

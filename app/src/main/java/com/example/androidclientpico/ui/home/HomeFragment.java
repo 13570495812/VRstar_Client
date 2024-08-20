@@ -66,6 +66,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import static com.example.androidclientpico.ui.MainActivity.M_this;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -92,7 +93,7 @@ public class HomeFragment extends Fragment {
     public static String code="";
     private TextView llquantity;
 
-    private TextView refreshs;
+//    private TextView refreshs;
 
     private RecyclerView mRecyclerView;
     private RadioButton Hotlist;
@@ -134,7 +135,6 @@ public class HomeFragment extends Fragment {
 
         Log.d(TAG,"onAttach");
     }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 //        Bundle bundle = this.getArguments();
@@ -142,7 +142,6 @@ public class HomeFragment extends Fragment {
 //        Log.d(TAG,"DSFL"+sd);
         super.onCreate(savedInstanceState);
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -152,10 +151,7 @@ public class HomeFragment extends Fragment {
 //        ParentActivity parentActivity = (ParentActivity ) getActivity();
         view = inflater.inflate(R.layout.fragment_home,container,false);
         radioGroups = view.findViewById(R.id.ll_home_radioGroup);
-
-
         chooseAll = view.findViewById(R.id.ll_home_choose_all); // 全部
-
         Hotlist = view.findViewById(R.id.ll_home_choose_Hotlist);
         movement = view.findViewById(R.id.ll_home_choose_Movement);
         shoot = view.findViewById(R.id.ll_home_choose_Shoot);
@@ -165,31 +161,25 @@ public class HomeFragment extends Fragment {
         plot = view.findViewById(R.id.ll_home_choose_Plot);
         puzzle = view.findViewById(R.id.ll_home_choose_Puzzle);
         other = view.findViewById(R.id.ll_home_choose_Other);
-
         timeUpdate = view.findViewById(R.id.time_update); //
         //是否在线
         online = view.findViewById(R.id.l_top_Online);
-
         llquantity = view.findViewById(R.id.ll_home_quantity); //电量
-
-        refreshs = view.findViewById(R.id.home_refresh); // 刷新
+//        refreshs = view.findViewById(R.id.home_refresh); // 刷新
         // 免费模式显示的布局
         lferr_mode = view.findViewById(R.id.Free_mode);
         ferr_text = view.findViewById(R.id.text_mode_home);
-
         lcharge_mode = view.findViewById(R.id.charge_mode);
         mRecyclerView = view.findViewById(R.id.recyclerView);  // recyclerView布局
         free_mode_functuon = new Read_coin_file();
 //        llhomename = view.findViewById(R.id.ll_home_namell);
 //        RecyclerView.Adapter my = MyRecyclerViewAdapter();
-//        MyRecyclerViewAdapter = MyRecyclerViewAdapter(this,listView)
-    
-        setViewChoos();
-        OkHttpClientRequstC(0); //  默认获取全部数据
+//        MyRecyclerViewAdapter = MyRecyclerViewAdapter(this,listView
+//        setViewChoos();
+//        OkHttpClientRequstC(0); //  默认获取全部数据
         initData();// 初始化
 //        getJsonList();
         context = getContext();
-
         return view;
     }
 
@@ -199,20 +189,19 @@ public class HomeFragment extends Fragment {
     public void HomeQuantity(){
         String ms= fragmentCallback.getMsgHomeQrFromActivity("mag");
         llquantity.setText("Quantity:"+ms);
-
+        getNavList();
     }
-
     /**
      * 服务器重新启动 MediaPlayer
      */
-    public void updateUi() {
-        new Thread(){
-            @Override
-            public void run(){
-//                Log.e(TAG,"djfdljfld+"+llhomename);
-            }
-        }.start();
-    }
+//    public void updateUi() {
+//        new Thread(){
+//            @Override
+//            public void run(){
+////                Log.e(TAG,"djfdljfld+"+llhomename);
+//            }
+//        }.start();
+//    }
     /**
      * 获取时间
      */
@@ -259,65 +248,65 @@ public class HomeFragment extends Fragment {
      * allCreateRequst 全部
      * 0
      */
-    private Request allCreateRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/DataList.json").get().build();
-    }
+//    private Request allCreateRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/DataList.json").get().build();
+//    }
     /**
      * 热销榜 1
      */
-    private Request HotlistRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Hotlist.json").get().build();
-    }
+//    private Request HotlistRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Hotlist.json").get().build();
+//    }
     /**
      * 运动 2
      */
-    private Request MovementRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Movement.json").get().build();
-    }
+//    private Request MovementRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Movement.json").get().build();
+//    }
 
     /**
      * 射击 3
      */
-    private Request ShootRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Shoot.json").get().build();
-    }
+//    private Request ShootRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Shoot.json").get().build();
+//    }
 
     /**
      * 策略 4
      */
-    private Request StrategyRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Strategy.json").get().build();
-    }
+//    private Request StrategyRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Strategy.json").get().build();
+//    }
     /**
      * 冒险 5
      */
-    private Request AdventureRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Adventure.json").get().build();
-    }
+//    private Request AdventureRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Adventure.json").get().build();
+//    }
     /**
      * 休闲 6
      */
-    private Request LeisureRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Leisure.json").get().build();
-    }
+//    private Request LeisureRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Leisure.json").get().build();
+//    }
     /**
      * 休闲 7
      */
-    private Request PlotRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Plot.json").get().build();
-    }
+//    private Request PlotRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Plot.json").get().build();
+//    }
     /**
      * 益智 8
      */
-    private Request PuzzleRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Puzzle.json").get().build();
-    }
+//    private Request PuzzleRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Puzzle.json").get().build();
+//    }
     /**
      * 其他 9
      */
-    private Request OtherRequst(){
-        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Other.json").get().build();
-    }
+//    private Request OtherRequst(){
+//        return  new Request.Builder().url("https://jamma.globalvrpark.com/img_tmp/jsonData/Other.json").get().build();
+//    }
 
 //    /**
 //     * 5 动作
@@ -383,6 +372,7 @@ public class HomeFragment extends Fragment {
             lferr_mode.setVisibility(View.GONE);
             lcharge_mode.setVisibility(View.VISIBLE);
         }
+
 //        getJsonList();
         myCountDownTimer = new MyCountDownTimer(TIME, 1000);
         myCountDownTimer.start();
@@ -434,9 +424,9 @@ public class HomeFragment extends Fragment {
     /**
      * 倒计时
      */
-    public class MyCountDownTimer extends CountDownTimer {
+    private class MyCountDownTimer extends CountDownTimer {
 
-        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+        private MyCountDownTimer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
         @Override
@@ -445,9 +435,10 @@ public class HomeFragment extends Fragment {
         }
         @Override
         public void onFinish() {
-            getNavList();
-//            getJsonList();
+//            getNavList();
+            getJsonList();
             myCountDownTimer.cancel();
+//            M_this.Neo3KillApps(null, new String[]{M_this.PackName}, 0);
 //            finish();
         }
     }
@@ -629,7 +620,7 @@ public class HomeFragment extends Fragment {
                 }
                 radioGroups.check(radioGroupsCheck);
                 radioGroupsCheckClick=true;
-                getJsonList();
+//                getJsonList();
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -725,271 +716,273 @@ public class HomeFragment extends Fragment {
             }
         });
         /** 刷新*/
-        refreshs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                JSONArray jsonArray =  getFilePermission();
-                FlexboxLayout flexboxLayout = (FlexboxLayout) getActivity().findViewById(R.id.flexbox_layout); // 大布局
-                flexboxLayout.removeAllViews(); // 清空flexbox
-                if (jsonArray != null) {
-                    try {
-                        int a = jsonArray.length();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject item = jsonArray.getJSONObject(i);
-                            String CHname = item.getString("CHname");
-                            String name = item.getString("name");
-                            int type = item.getInt("type");
-                            String img = item.getString("image");
-                            String PackageName = item.getString("PackageName");
-                            View newItemView =  LayoutInflater.from(HomeFragment.this.getContext()).inflate(R.layout.item_layout, null);
-                            /** 获取item.xml */
-                            FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(
-                                    FlexboxLayout.LayoutParams.WRAP_CONTENT,
-                                    FlexboxLayout.LayoutParams.WRAP_CONTENT
-                            );
-//                        if((3 * a) - 1!=a){
-//                            lp.setFlexGrow(1.0f); // 设置item的flex grow属性，控制item在空间不足时的扩展比例
+
+//        refreshs.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                JSONArray jsonArray =  getFilePermission();
+//                FlexboxLayout flexboxLayout = (FlexboxLayout) getActivity().findViewById(R.id.flexbox_layout); // 大布局
+//                flexboxLayout.removeAllViews(); // 清空flexbox
+//                if (jsonArray != null) {
+//                    try {
+//                        int a = jsonArray.length();
+//                        for (int i = 0; i < jsonArray.length(); i++) {
+//                            JSONObject item = jsonArray.getJSONObject(i);
+//                            String CHname = item.getString("CHname");
+//                            String name = item.getString("name");
+//                            int type = item.getInt("type");
+//                            String img = item.getString("image");
+//                            String PackageName = item.getString("PackageName");
+//                            View newItemView =  LayoutInflater.from(HomeFragment.this.getContext()).inflate(R.layout.item_layout, null);
+//                            /** 获取item.xml */
+//                            FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(
+//                                    FlexboxLayout.LayoutParams.WRAP_CONTENT,
+//                                    FlexboxLayout.LayoutParams.WRAP_CONTENT
+//                            );
+////                        if((3 * a) - 1!=a){
+////                            lp.setFlexGrow(1.0f); // 设置item的flex grow属性，控制item在空间不足时的扩展比例
+////                        }
+//
+//                            lp.setMargins(20, 10, 20, 10); // 设置item的margin
+//
+//                            flexboxLayout.addView(newItemView, lp);
+//
+//                            flexboxLayout.requestLayout();
+//                            /* 名字*/
+//                            View itemLis = flexboxLayout.getChildAt(i);
+//                            TextView textView = itemLis.findViewById(R.id.ll_home_name);
+//                            if(langa.equals("1")){
+//                                textView.setText(CHname);
+//                            }else {
+//                                textView.setText(name);
+//                            }
+//                            /*图片*/
+//                            ImageView imageView = itemLis.findViewById(R.id.ll_home_imageView);
+//                            BitmapFactory.Options options = new BitmapFactory.Options();
+//                            Bitmap bitmap = BitmapFactory.decodeFile(img, options);
+//                            imageView.setImageBitmap(bitmap);
+//                            /*点击事件*/
+//                            TextView openStart = itemLis.findViewById(R.id.openStart);
+//                            openStart.setTag(PackageName); // 设置 tag 属性为 item 的 index
+//                            openStart.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+////                                    Log.e(TAG,"757757757757757757757");
+//                                    String Packag = (String) v.getTag();
+//                                    if(Packag.endsWith("mp4")){
+//                                        //启动视频播放器播放视频
+//                                        fragmentCallback.onVideoClicksendMsgToActivity(Packag);
+//                                    }else {
+//                                        fragmentCallback.senMsgPackageName(Packag);
+//
+////                                        Intent launchIntentForPackage=getActivity().getPackageManager().getLaunchIntentForPackage(Packag); // 启动第三方APP
+////                                            getActivity().startActivity(launchIntentForPackage);
+//
+//
+//                                    }
+//                                }
+//                            });
 //                        }
-
-                            lp.setMargins(20, 10, 20, 10); // 设置item的margin
-
-                            flexboxLayout.addView(newItemView, lp);
-
-                            flexboxLayout.requestLayout();
-                            /* 名字*/
-                            View itemLis = flexboxLayout.getChildAt(i);
-                            TextView textView = itemLis.findViewById(R.id.ll_home_name);
-                            if(langa.equals("1")){
-                                textView.setText(CHname);
-                            }else {
-                                textView.setText(name);
-                            }
-                            /*图片*/
-                            ImageView imageView = itemLis.findViewById(R.id.ll_home_imageView);
-                            BitmapFactory.Options options = new BitmapFactory.Options();
-                            Bitmap bitmap = BitmapFactory.decodeFile(img, options);
-                            imageView.setImageBitmap(bitmap);
-                            /*点击事件*/
-                            TextView openStart = itemLis.findViewById(R.id.openStart);
-                            openStart.setTag(PackageName); // 设置 tag 属性为 item 的 index
-                            openStart.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-//                                    Log.e(TAG,"757757757757757757757");
-                                    String Packag = (String) v.getTag();
-                                    if(Packag.endsWith("mp4")){
-                                        //启动视频播放器播放视频
-                                        fragmentCallback.onVideoClicksendMsgToActivity(Packag);
-                                    }else {
-                                        fragmentCallback.senMsgPackageName(Packag);
-
-//                                        Intent launchIntentForPackage=getActivity().getPackageManager().getLaunchIntentForPackage(Packag); // 启动第三方APP
-//                                            getActivity().startActivity(launchIntentForPackage);
-
-
-                                    }
-                                }
-                            });
-                        }
-
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                }
-                /**
-                 * manactivity传数据
-                 */
-                fragmentCallback.sendMsgToActivity("刷新");
-
-            }
-        });
+//
+//                    } catch (JSONException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//
+//                }
+//                /**
+//                 * manactivity传数据
+//                 */
+//                fragmentCallback.sendMsgToActivity("刷新");
+//
+//            }
+//        });
         /** 全部*/
-        chooseAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(0);
-            }
-        });
+//        chooseAll.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(0);
+//            }
+//        });
         /**
          *
          *  排行 1
          */
-        Hotlist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(1);
-            }
-        });
+//        Hotlist.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(1);
+//            }
+//        });
         /**
          *
          *   排名2
          */
-        movement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(2);
-            }
-        });
+//        movement.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(2);
+//            }
+//        });
         /**
          *
          *  排序3
          *  */
-        shoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(3);
-            }
-        });
+//        shoot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(3);
+//            }
+//        });
         /**
          *
          * 排序4
          */
-        strategy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(4);
-            }
-        });
+//        strategy.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(4);
+//            }
+//        });
         /**
          *
          * 排序5
          */
-        adventure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(5);
-            }
-        });
+//        adventure.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(5);
+//            }
+//        });
         /**
          *
          * 排序6
          */
-        leisure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(6);
-            }
-        });
+//        leisure.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(6);
+//            }
+//        });
         /**
          *
          * 排序7
          */
-        plot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(7);
-            }
-        });
+//        plot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(7);
+//            }
+//        });
         /**
          *
          * 排序8
          */
-        puzzle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(8);
-            }
-        });
+//        puzzle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(8);
+//            }
+//        });
         /**
          *
          * 排序9
          */
-        other.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OkHttpClientRequstC(9);
-            }
-        });
+//        other.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                OkHttpClientRequstC(9);
+//            }
+//        });
     }
 
     /*网络请求*/
-    public void OkHttpClientRequstC(int a){
-
-        HomeQuantity();
-        // 1客户端
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(5,TimeUnit.SECONDS); // 链接编辑
-        builder.writeTimeout(5,TimeUnit.SECONDS);
-        builder.readTimeout(5,TimeUnit.SECONDS);
-        // 2请求
-        OkHttpClient client =builder.build();
-        if(a==0){
-            CrRequst =allCreateRequst();
-        }
-        if(a==1){
-            CrRequst =HotlistRequst();
-        }
-        if(a==2){
-            CrRequst =MovementRequst();
-        }
-        if(a==3){
-            CrRequst =ShootRequst();
-        }
-        if(a==4){
-            CrRequst =StrategyRequst();
-        }
-        if(a==5){
-            CrRequst =AdventureRequst();
-        }
-        if(a==6){
-            CrRequst =LeisureRequst();
-        }
-        if(a==7){
-            CrRequst =PlotRequst();
-        }
-        if(a==8){
-            CrRequst =PuzzleRequst();
-        }
-        if(a==9){
-            CrRequst =OtherRequst();
-        }
-        Call call =client.newCall(CrRequst);
-        // 3 返回数据的处理
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-//                Log.d(TAG,"ml"+call.request());
-                System.out.println("-------------------------请求失败");
-                e.printStackTrace();
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                System.out.println("-------------------------请求成功");
-
-                BaseCommandModel model =(BaseCommandModel) ResponseEntityToModule.parseJsonToModule(response.body().string(), BaseCommandModel.class);
-                data = model.data;
-                /**
-                 * RecyclerView
-                 */
-                mRecyclerView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecyclerView.scrollToPosition(0);
-                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-                        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
-                        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),LinearLayout.VERTICAL));
-
-                        adapter = new MyRecyclerViewAdapter(getActivity(),data);
-                        mRecyclerView.setAdapter(adapter);
-                        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                        adapter.setOnAdapterClickListener(new OnAdapterClickListener() {
-                            @Override
-                            public void onCityClick(String name) {
-//                                Log.d(TAG,"----------我是fragemnt接收的包名--------------"+name);
-                                code=name;
-                                fragmentCallback.senMsgPackageName(code);
-                            }
-                            @Override
-                            public void onLocateClick() {
-
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
+//    public void OkHttpClientRequstC(int a){
+//
+//        HomeQuantity();
+//        // 1客户端
+//        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+//        builder.connectTimeout(5,TimeUnit.SECONDS); // 链接编辑
+//        builder.writeTimeout(5,TimeUnit.SECONDS);
+//        builder.readTimeout(5,TimeUnit.SECONDS);
+//        // 2请求
+//        OkHttpClient client =builder.build();
+//        if(a==0){
+//            CrRequst =allCreateRequst();
+//        }
+//        if(a==1){
+//            CrRequst =HotlistRequst();
+//        }
+//        if(a==2){
+//            CrRequst =MovementRequst();
+//        }
+//        if(a==3){
+//            CrRequst =ShootRequst();
+//        }
+//        if(a==4){
+//            CrRequst =StrategyRequst();
+//        }
+//        if(a==5){
+//            CrRequst =AdventureRequst();
+//        }
+//        if(a==6){
+//            CrRequst =LeisureRequst();
+//        }
+//        if(a==7){
+//            CrRequst =PlotRequst();
+//        }
+//        if(a==8){
+//            CrRequst =PuzzleRequst();
+//        }
+//        if(a==9){
+//            CrRequst =OtherRequst();
+//        }
+//        Call call =client.newCall(CrRequst);
+//        // 3 返回数据的处理
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+////                Log.d(TAG,"ml"+call.request());
+//                System.out.println("-------------------------请求失败");
+//
+//                e.printStackTrace();
+//            }
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                System.out.println("-------------------------请求成功");
+//
+//                BaseCommandModel model =(BaseCommandModel) ResponseEntityToModule.parseJsonToModule(response.body().string(), BaseCommandModel.class);
+//                data = model.data;
+//                /**
+//                 * RecyclerView
+//                 */
+//                mRecyclerView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mRecyclerView.scrollToPosition(0);
+//                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+//                        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
+//                        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),LinearLayout.VERTICAL));
+//
+//                        adapter = new MyRecyclerViewAdapter(getActivity(),data);
+//                        mRecyclerView.setAdapter(adapter);
+//                        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//                        adapter.setOnAdapterClickListener(new OnAdapterClickListener() {
+//                            @Override
+//                            public void onCityClick(String name) {
+////                                Log.d(TAG,"----------我是fragemnt接收的包名--------------"+name);
+//                                code=name;
+//                                fragmentCallback.senMsgPackageName(code);
+//                            }
+//                            @Override
+//                            public void onLocateClick() {
+//
+//                            }
+//                        });
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     /**
      * 时间倒计时
@@ -1038,21 +1031,21 @@ public class HomeFragment extends Fragment {
     }
 
     //    默认选择
-    private void setViewChoos() {
-        chooseAll.setChecked(true);
-
-        if(searchView==null){return;
-
-        }else{//获取ImageView的id
-//            searchView.setHintTextColor(TypedValue.COMPLEX_UNIT_SP, 14);//14sp//设置字体颜色
-//            int imgId = searchView.getContext().getResources().getIdentifier("android:id/search_mag_icon",null,null);//获取ImageView
-
-//            ImageView searchButton =(ImageView)searchView.findViewById(imgId);//设置图片
-
-//            searchButton.setImageResource(R.drawable.search);//不使用默认
-
-//            searchView.setIconifiedByDefault(false);
-
-        }
-    }
+//    private void setViewChoos() {
+////        chooseAll.setChecked(true);
+//
+//        if(searchView==null){return;
+//
+//        }else{//获取ImageView的id
+////            searchView.setHintTextColor(TypedValue.COMPLEX_UNIT_SP, 14);//14sp//设置字体颜色
+////            int imgId = searchView.getContext().getResources().getIdentifier("android:id/search_mag_icon",null,null);//获取ImageView
+//
+////            ImageView searchButton =(ImageView)searchView.findViewById(imgId);//设置图片
+//
+////            searchButton.setImageResource(R.drawable.search);//不使用默认
+//
+////            searchView.setIconifiedByDefault(false);
+//
+//        }
+//    }
 }
