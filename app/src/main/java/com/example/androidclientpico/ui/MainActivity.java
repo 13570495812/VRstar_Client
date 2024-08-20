@@ -16,9 +16,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -74,6 +76,8 @@ import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler mHandler;
 
     public static boolean isTime = false;
+    public static boolean isStartTime=false;
     public static final int MSG_ONE = 0;
 
     public static final int MSG_TOW = MSG_ONE + 1;
@@ -100,6 +105,11 @@ public class MainActivity extends AppCompatActivity {
     private int i = 0;
 
     private int TIME = 1000;
+
+
+
+
+
 
     public static MainActivity mainActivity = null;
     private MainActivity myApplicaton;
@@ -165,19 +175,19 @@ public class MainActivity extends AppCompatActivity {
      * 是否游戏中
      */
     public static boolean isGameing = false;
-    public static boolean one = false;
+//    public static boolean one = false;
     /**
      * 是否倒计时
      */
-    public static boolean countdown = false;
+//    public static boolean countdown = false;
     /**
      * 是否是游戏
      */
-    public static boolean isGame = false;
+//    public static boolean isGame = false;
     /**
      * 收到游戏时间
      */
-    public static String StringTimes = "";
+//    public static String StringTimes = "";
     /**
      * 前台服务
      */
@@ -185,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * MAC序列号
      */
-    public static String MAC_Address = "";
+//    public static String MAC_Address = "";
     public static MainActivity M_this;
     /**
      * 游戏倒计时时间
@@ -202,9 +212,10 @@ public class MainActivity extends AppCompatActivity {
      */
     public static String wifiConnectAdrss = "";
 
-    private String wifiConfig;
-    SocketConnect socketConnect = new SocketConnect();
-    WifiConnect wifiConnect;
+//    private String wifiConfig;
+//    SocketConnect socketConnect = new SocketConnect();
+//    TcpManager tcpManager =new TcpManager();
+//    WifiConnect wifiConnect;
     /**
      * fragments
      */
@@ -227,12 +238,20 @@ public class MainActivity extends AppCompatActivity {
     private String wifi_name;
     private Read_coin_file file_mode;
 
-    private  static final String C1_="CLOSE1";
-    private  static final String C2_="CLOSE2";
-    private  static final String C3_="CLOSE3";
+    private  static final String C1="CLOSEALL";
     private  static final String UDPIP_="192.168.188.255";
     private UdpTool udpTool;
 
+    private  TcpManager tcpManager;
+    private PersonM_T personM_t;
+
+
+   public String DATA_HOT = "01";  //
+    public String Free_Not = "01";  // 是否免费模式
+    public String In_Game = "01";   // 是否游戏打开中
+    public String DATA_TIME = "0";  // 时间
+    public String SK_CONNECTED="01" ;  // 是否连接成功
+    public String END_CODE = "11";  // 结束码
     // 检查权限
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        Log.d(TAG, "onCreate");
+        M_this = this;
 //        获取控件
         llConent = findViewById(R.id.ll_main_content);
         rbHome = findViewById(R.id.rb_main_home);
@@ -251,17 +271,28 @@ public class MainActivity extends AppCompatActivity {
          * frament 全参数
          */
 
-
         /**
          * 导入是否免费模式
          */
         file_mode = new Read_coin_file();
+
+        /**
+         * 导入socekt 数据处理
+         */
+        personM_t = new PersonM_T();
+        /**
+         * 导入tcp通信
+         */
+        tcpManager = new TcpManager();
+        /**
+         * udp 发送命令
+         */
         udpTool=new UdpTool(this);
         /**
          * 初始化
          */
-        Init();
-        M_this = this;
+        initView();
+
         /**
          * 默认选择
          */
@@ -273,13 +304,16 @@ public class MainActivity extends AppCompatActivity {
         /**
          * 获取电量信心
          */
-        getSN_Quantity();
+
+
+
+//        getSN_Quantity();
 
         //Density.setDensity(getApplication(),this);
     }
-
-    private void Init() {
+    private void initView() {
         mainActivity = this;
+        onViewClicked();
         /**
          *   绑定ToBService
          */
@@ -290,11 +324,164 @@ public class MainActivity extends AppCompatActivity {
         checkPermission();
 
         /**
-         * 获取服务器IP
+         * 获取服务器IP 文件夹读取
          */
         SERVER_IP = GetServerIP();
 //        SERVER_IP = "192.168.188.186";
-        /*语言选择*/
+        /*语言选择获取文件夹*/
+
+        funLanguae();
+        /** 音量设置 */
+//        audioUtil = new AudioUtil(getApplicationContext());
+//        audioUtil.setMediaVolume(+50);
+        /**
+         * 获取MAC_Address
+         */
+//        MAC_Address = getmacAddress();
+        /**
+         * socketConnect
+         */
+        tcpManager.initSocket(SERVER_IP,Integer.toString(SERVER_PORT));
+//        socketConnect.conn();
+
+        intentService = new Intent(MainActivity.this, MyService.class);//前台服务
+        startService(intentService);
+        /**
+         * handlerThread
+         */
+
+//        new Thread(new ThreadShow()).start();
+
+        /**
+         * 获取IP
+         */
+//        wifiConnect = new WifiConnect(this);
+//        wifiConnectAdrss = wifiConnect.getLocalIpAddress(this);
+
+        /** 获取缓存时间 */
+//        mCache = ACache.get(this);
+//        mCache.put("TimeCache", Integer.toString(CountDownGameTimes));
+//        String GetTime = mCache.getAsString("TimeCache");
+//        if (GetTime.equals("0") || GetTime == null) {
+////            myCountDownTimer.cancel();
+//        } else {
+////            myCountDownTimer = new MyCountDownTimer(Integer.parseInt(GetTime), 1000);
+////            myCountDownTimer.start();
+//        }
+
+
+
+        if(M_this.file_mode.ferr().equals("1")){
+            String GetTime = M_this.file_mode.getForTime();
+            if (GetTime.equals("0") || GetTime == null || GetTime == "") {
+                if( myCountDownTimer !=null){
+                    myCountDownTimer.cancel();
+                    isStartTime=false;
+                }
+            } else  {
+                if( myCountDownTimer !=null){
+//                M_this.coinipSave.changeForTime
+                    myCountDownTimer.cancel();
+                }
+                startTime();
+                isStartTime=true;
+            }
+        }
+        if(PackName.equals("")){
+//            Log.e("errrrr","我是空空的");
+//           PackName="com.example.androidclientpico";
+//            starapps(); // 打开游戏
+        }else {
+//            Log.e("errrrr","我是不是空空的");
+            Neo3KillApps(null, new String[]{PackName}, 0);
+
+//            PackName="com.example.androidclientpico";
+//            starapps(); // 打开游戏
+
+        }
+
+
+//        myCountDownTimer = new MyCountDownTimer(360000, 1000);
+//        myCountDownTimer.start();
+
+        /**
+         * 发送udp
+         */
+        UDPstartC1(C1,UDPIP_);
+
+    /*    UDPstartC2(C2_,UDPIP_);
+        UDPstartC3(C3_,UDPIP_);*/
+
+    }
+
+//    @OnClick(R.id.sendBtn)
+
+    private void startTime() {
+//        Log.e(TAG,"12346796421313");
+//        String GetTime = mCache.getAsString("TimeCache");
+
+//        String GetforTime =Integer.toString(Integer.parseInt(coinipSave.ReturForTime()) *1000);
+//        Log.e("startTime",GetforTime);
+//        int a =Integer.parseInt(GetTime);
+        M_this.isTime=true; // 是否可以打开游戏
+        myCountDownTimer = new MyCountDownTimer(Integer.parseInt(M_this.file_mode.getForTime()) *1000, 1000);
+        myCountDownTimer.start();
+
+//       isStartTime = true;
+    }
+    private void TimeCancles() {
+        myCountDownTimer.cancel();
+    }
+public static String stringToHex(String str) {
+    byte[] bytes = str.getBytes();
+    StringBuilder sb = new StringBuilder();
+    for (byte b : bytes) {
+        sb.append(String.format("%02x", b));
+    }
+    return sb.toString();
+}
+    public void onViewClicked() {
+//        Log.e("4545454545","121212121212");
+
+//        String data = contentEt.getText().toString().trim();
+//            byte[] data = {0x01,0x02,0x5c,0x04};
+//        String str = "3366";
+//        String hex = stringToHex(str);
+//        System.out.println("字符串 \"" + str + "\" 转换后的十六进制: " + hex);
+
+//        int decimalNumber = 23587;
+//        String hexString = Integer.toHexString(decimalNumber);
+//        System.out.println("十进制 " + decimalNumber + " 转换为十六进制是: " + hexString);
+//
+//        int number = 23587;
+//        byte[] bytes = ByteBuffer.allocate(4).putInt(number).array();
+//        for (byte b : bytes) {
+//            System.out.print(Integer.toHexString(b & 0xFF) + " ");
+//        }
+//        System.out.println("十进制 " + number);
+//
+//
+//        String numberA = "23587";
+//        System.out.println("十进制 " + number);
+//        byte[] srtbyte = null;
+//        srtbyte = numberA.getBytes(StandardCharsets.UTF_8);
+//        System.out.println("srtbyte的值 " + srtbyte);
+//        byte[] arr =new byte[data.length+srtbyte.length];
+//        System.out.println("arr的长度 " + arr.length);
+//        int index = 0;
+//        for (byte b : srtbyte) {
+//            arr[0]=0x01;
+//            arr[1]=0x01;
+//            arr[index+2]=b;
+//            arr[srtbyte.length+2]=0x09;
+//            arr[srtbyte.length+4]=0x08;
+//        }
+//        for (int i = 0; i < a.length; i++) {
+//            Log.e("Fruit", ""+a[i]);
+//        }
+
+    }
+    private void funLanguae() {
         Language = GetLanguage();
         if (Language.equals("1")) {
             rbHome.setText("首页");
@@ -308,47 +495,6 @@ public class MainActivity extends AppCompatActivity {
             rbAction.setText("Activities");
             rbSet.setText("Setting");
         }
-        /** 音量设置 */
-        audioUtil = new AudioUtil(getApplicationContext());
-        audioUtil.setMediaVolume(+100);
-        /**
-         * 获取MAC_Address
-         */
-        MAC_Address = getmacAddress();
-        /**
-         * socketConnect
-         */
-        socketConnect.conn();
-        intentService = new Intent(MainActivity.this, MyService.class);//前台服务
-        startService(intentService);
-        /**
-         * handlerThread
-         */
-
-        new Thread(new ThreadShow()).start();
-
-        /**
-         * 获取IP
-         */
-        wifiConnect = new WifiConnect(this);
-        wifiConnectAdrss = wifiConnect.getLocalIpAddress(this);
-
-        /** 获取缓存时间 */
-//        mCache = ACache.get(this);
-//        mCache.put("TimeCache", Integer.toString(CountDownGameTimes));
-//        String GetTime = mCache.getAsString("TimeCache");
-//        if (GetTime.equals("0") || GetTime == null) {
-////            myCountDownTimer.cancel();
-//        } else {
-////            myCountDownTimer = new MyCountDownTimer(Integer.parseInt(GetTime), 1000);
-////            myCountDownTimer.start();
-//        }
-        /**
-         * 发送udp
-         */
-        UDPstartC1(C1_,UDPIP_);
-        UDPstartC2(C2_,UDPIP_);
-        UDPstartC3(C3_,UDPIP_);
     }
 
     /**
@@ -360,106 +506,108 @@ public class MainActivity extends AppCompatActivity {
             String[] strArray = (String[]) msg.obj;
 //            Log.e(TAG,"==="+msg.what);
             switch (msg.what) {
-                case 0:
-                    if (!isGameing) {
-                        txtConnectInfo = "Offline";
-                        bf.OnlineHome();
-                        mainActivity.socketConnect.isRegister = false;
-                        mainActivity.ShakeHands();
-                    }
-                    break;
+//                case 0:
+//                    if (!isGameing) {
+//                        txtConnectInfo = "Offline"; //
+//
+//                        bf.OnlineHome();
+//
+//                        mainActivity.socketConnect.isRegister = false;
+//                        mainActivity.ShakeHands();
+//                    }
+//                    break;
                 case 1:  //** 上线 *//*
-//                    Log.d(TAG,"--------------------------------1 我在线------------------"+isGameing);
-//                    Log.d(TAG,"--------------------------------1 我在线------------------"+mainActivity.socketConnect.isRegister);
-//                    if (!mainActivity.socketConnect.isRegister) {
-                        try {
-                            mainActivity.QRcontent = strArray[1];
-                            mainActivity.socketConnect.isRegister = true;
-                            txtConnectInfo = "Online";
-                            bf.OnlineHome();
-//                            mainActivity.SendMessage("1", true);
-                            bf.quantityHome(); //电量
-//                            Log.d(TAG,"--------------------------------我改咕咕咕咕------------------"+mainActivity.socketConnect.isRegister);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+//
+//                        try {
+//                            mainActivity.QRcontent = strArray[1];
+//                            mainActivity.socketConnect.isRegister = true;
+//                            txtConnectInfo = "Online";
+//                            bf.OnlineHome();
+////                            mainActivity.SendMessage("1", true);
+//                            bf.quantityHome(); //电量
+////                            Log.d(TAG,"--------------------------------我改咕咕咕咕------------------"+mainActivity.socketConnect.isRegister);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
 //                    }
                     break;
                 case 2: //** 服务器发生投币器信号发生*//*
 //                    Log.d(TAG,"--------------------------------2 收到投币信息------------------"+isGameing);
-                    PackName = strArray[1];
-                    StringTimes = strArray[2];
+//                    PackName = strArray[1];
+//                    StringTimes = strArray[2];
 //                    }
                     break;
                 case 3:
+                    Log.d("hkdhfkdh","--------------------------------3 上线------------------");
                     //** 发送时间过来APK //mainActivity.PlayGame("com.example.xch.generateqrcode"); *//*
-                    mainActivity.ScreenOn();
-                        try {
-//                            Log.d(TAG,"--------------------------------3 上线------------------"+isGameing);
-//                            PackName = strArray[1];
-                            StringTimes = strArray[3];
-                            if (!isTime) {
-                                myCountDownTimer = new MyCountDownTimer( Integer.parseInt(StringTimes), 1000);
-                                myCountDownTimer.start();
-                                isTime=true;
-                            } else {
-//                                Log.d("TAG","===========第二次次========="+isTime);
-                                myCountDownTimer.cancel();
-                                myCountDownTimer = new MyCountDownTimer(Integer.parseInt(StringTimes), 1000);
-                                myCountDownTimer.start();
-                            }
-                        } catch (Exception e) {
-                        }
+//                    mainActivity.ScreenOn();
+//                        try {
+////                            Log.d(TAG,"--------------------------------3 上线------------------"+isGameing);
+////                            PackName = strArray[1];
+//                            StringTimes = strArray[3];
+//                            if (!isTime) {
+//                                myCountDownTimer = new MyCountDownTimer( Integer.parseInt(StringTimes), 1000);
+//                                myCountDownTimer.start();
+//                                isTime=true;
+//                            } else {
+////                                Log.d("TAG","===========第二次次========="+isTime);
+//                                myCountDownTimer.cancel();
+//                                myCountDownTimer = new MyCountDownTimer(Integer.parseInt(StringTimes), 1000);
+//                                myCountDownTimer.start();
+//                            }
+//                        } catch (Exception e) {
+//                        }
                     break;
                 case 4: //** apk杀进程 *//*
-                    try {
-                        PackName = strArray[1];
-                        mainActivity.Neo3KillApps(null, new String[]{PackName}, 0);
-
-                        isGame = false;
-                        isGameing = false;
-                        mainActivity.socketConnect.isRegister = false;
-                        mainActivity.SendMessage("4", true);
-                        one = true;
-                    } catch (Exception e) {
-//                        AppContext.restartApp();
-                    }
+//                    try {
+//                        PackName = strArray[1];
+//                        mainActivity.Neo3KillApps(null, new String[]{PackName}, 0);
+//
+//                        isGame = false;
+//                        isGameing = false;
+//                        mainActivity.socketConnect.isRegister = false;
+//                        mainActivity.SendMessage("4", true);
+//                        one = true;
+//                    } catch (Exception e) {
+////                        AppContext.restartApp();
+//                    }
                     break;
                 case 5://点击游戏打开
-                    mainActivity.ScreenOn();  // 点击打开游戏屏幕自动亮
-
-//                    if (strArray[1].equals("Status"))
-                        Log.d(TAG,"--------------------------------5 点击打开游戏 ------------------"+isGameing);
-//                        if(!PackName.equals("")){
-//                            mainActivity.Neo3KillApps(null, new String[]{PackName}, 0);
-//                        }
-//                    mainActivity.CurrentStatus();
-                    PackName = strArray[2];
-                    StringTimes = strArray[3];
-//                    Log.e(TAG,"我是时间"+ StringTimes);
-//                    Log.e(TAG,"我是apk报名"+ PackName);
-                    PackageManager packageManager = getPackageManager();
-                    Intent intent=new Intent();
-                    intent =packageManager.getLaunchIntentForPackage(PackName);
-                    if(intent==null){
-                        Log.e(TAG,"我是没有安装"+ PackName);
-                    }else{
-                        startActivity(intent);
-                    }
+                    System.out.println("--------------------------------5 点击打开游戏 -----------------");
+//                    mainActivity.ScreenOn();  // 点击打开游戏屏幕自动亮
+//
+////                    if (strArray[1].equals("Status"))
+                        Log.d(TAG,"--------------------------------5 点击打开游戏 ------------------");
+////                        if(!PackName.equals("")){
+////                            mainActivity.Neo3KillApps(null, new String[]{PackName}, 0);
+////                        }
+////                    mainActivity.CurrentStatus();
+//                    PackName = strArray[2];
+//                    StringTimes = strArray[3];
+////                    Log.e(TAG,"我是时间"+ StringTimes);
+////                    Log.e(TAG,"我是apk报名"+ PackName);
+//                    PackageManager packageManager = getPackageManager();
+//                    Intent intent=new Intent();
+//                    intent =packageManager.getLaunchIntentForPackage(PackName);
+//                    if(intent==null){
+//                        Log.e(TAG,"我是没有安装"+ PackName);
+//                    }else{
+//                        startActivity(intent);
+//                    }
                     break;
                 case 6://重啓
-                    if (strArray[1].equals("Restart"))
-//                        Log.d(TAG,"--------------------------------6 重啓 ------------------"+isGameing);
-                        SharedPreferencesUtil.getInstance(getApplicationContext()).setInt(SharedName.game_times.getValue(), CountDownGameTimes);
-                    mainActivity.SendMessage("6", true);
-//                    AppContext.restartApp();
+//                    if (strArray[1].equals("Restart"))
+////                        Log.d(TAG,"--------------------------------6 重啓 ------------------"+isGameing);
+//                        SharedPreferencesUtil.getInstance(getApplicationContext()).setInt(SharedName.game_times.getValue(), CountDownGameTimes);
+//                    mainActivity.SendMessage("6", true);
+////                    AppContext.restartApp();
                     break;
                 case 7://關機
-                    if (strArray[1].equals("Shutdown")) {
-//                        Log.d(TAG,"--------------------------------7 重啓 ------------------"+isGameing);
-                        mainActivity.SendMessage("7", true);
-                        mainActivity.androidShutDown();
-                    }
+//                    if (strArray[1].equals("Shutdown")) {
+////                        Log.d(TAG,"--------------------------------7 重啓 ------------------"+isGameing);
+//                        mainActivity.SendMessage("7", true);
+//                        mainActivity.androidShutDown();
+//                    }
                     break;
                 case 96: //** apk杀进程 *//*
                     try {
@@ -472,16 +620,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case 97://亮屏
-                    mainActivity.ScreenOn();
+//                    mainActivity.ScreenOn();
                     break;
                 case 98://熄屏
-                    mainActivity.ScreenOff();
+//                    mainActivity.ScreenOff();
                     break;
                 case 99:
 //                    Log.d(TAG,"--------------------------------0 999------------------"+msg.what);
                     break;
                 case 100:
-                    mainActivity.getSN_Quantity();
+//                    mainActivity.getSN_Quantity();
                     break;
                 default:
                     break;
@@ -492,48 +640,205 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 线程类
      */
-    class ThreadShow implements Runnable {
-        @Override
-        public void run() {
-            // TODO Auto-generated method stub
-            while (true) {
-                try {
-                    //开启倒计时
-                    if (countdown) {
-//                        mainActivity.TimeOut();
-                    }
-                    if (isGameing) { //保持游戏中亮屏
-                        Message msg = new Message();
-                        msg.what = 97;
-                        MainActivity.mainActivity.handler.sendMessage(msg);
-                    }
-                    if (!isGameing && one) {
-                        one = false;
-                        Message msg = new Message();
-                        msg.what = 0; //握手
-                        MainActivity.mainActivity.handler.sendMessage(msg);
-                    }
-                    Message msg = new Message();
-                    if (!socketConnect.isRegister) { //如果没有注册，一直发握手注册，
-                        msg.what = 0; //握手
-                        MainActivity.mainActivity.handler.sendMessage(msg);
-                    } else {
-                        msg.what = 1; //已经注册
-                        MainActivity.mainActivity.handler.sendMessage(msg);
-                        mainActivity.socketConnect.SendToServer(" 1;" + SN_Number + ";true");
-                        Thread.sleep(1000 * 5);
-                    }
-                    Thread.sleep(3000);
-
-                    mainActivity.getSN_Quantity();
-
-                } catch (Exception e) {
-                }
-            }
-        }
-    }
+//    class ThreadShow implements Runnable {
+//        @Override
+//        public void run() {
+//            // TODO Auto-generated method stub
+//            while (true) {
+//                try {
+//                    //开启倒计时
+//                    if (countdown) {
+////                        mainActivity.TimeOut();
+//                    }
+//                    if (isGameing) { //保持游戏中亮屏
+//                        Message msg = new Message();
+//                        msg.what = 97;
+//                        MainActivity.mainActivity.handler.sendMessage(msg);
+//                    }
+//                    if (!isGameing && one) {
+//                        one = false;
+//                        Message msg = new Message();
+//                        msg.what = 0; //握手
+//                        MainActivity.mainActivity.handler.sendMessage(msg);
+//                    }
+//                    Message msg = new Message();
+//                    if (!socketConnect.isRegister) { //如果没有注册，一直发握手注册，
+//                        msg.what = 0; //握手
+//                        MainActivity.mainActivity.handler.sendMessage(msg);
+//                    } else {
+//                        msg.what = 1; //已经注册
+//                        MainActivity.mainActivity.handler.sendMessage(msg);
+//                        mainActivity.socketConnect.SendToServer(" 1;" + SN_Number + ";true");
+//                        Thread.sleep(1000 * 5);
+//                    }
+//                    Thread.sleep(3000);
+//
+//                    mainActivity.getSN_Quantity();
+//
+//                } catch (Exception e) {
+//                }
+//            }
+//        }
+//    }
     /*字线程*/
     /**
+     * socket数据处理
+     */
+    public void  socket_data_processing(String rcvMsg){
+//        Log.e("1234567890",rcvMsg);
+        /**
+         * 保存app
+         */
+        pbsAppKeepAlive();
+//        System.out.println(rcvMsg);
+        String[] msgArray = rcvMsg.split(";");
+////        Message msg = new Message();
+        String b =msgArray[0].substring(msgArray[0].length()-2, msgArray[0].length());
+
+
+//        if (msgArray[0].substring(msgArray[0].length()-2, msgArray[0].length()).equals("01")&&msgArray[5].equals("11")){
+//            In_Game=msgArray[2];
+//                DATA_TIME=msgArray[3];
+
+
+            if(msgArray[1].equals("01")){
+//                System.out.println( "我是免费模式" );
+
+            }else{
+//                System.out.println( "我是收费模式" );
+
+            }
+
+            if(msgArray[2].equals("01")){
+//                System.out.println( "我是没有打开游戏" );
+
+
+            }else{
+
+                M_this.PackName = msgArray[5];
+                M_this.starapps(); // 打开游戏
+
+//                String dataw= DATA_HOT+";"+Free_Not+";"+In_Game+";"+DATA_TIME+";"+SK_CONNECTED+";"+END_CODE;
+//                M_this.server_socket.SendServer(dataw);
+//                M_this.tcpManager.sendData(dataw);
+//                System.out.println( "我是打开游戏" );
+            }
+//
+            if(Integer.parseInt(msgArray[3]) <=1){
+//                    System.out.println( "我是0" );
+                M_this.file_mode.changeForTime("0");
+
+            }else{
+
+                System.out.println(msgArray[3]);
+
+              String a =M_this.file_mode.getForTime();
+                if(Integer.parseInt(msgArray[3]) > Integer.parseInt(a)+10){
+                    M_this.file_mode.changeForTime(msgArray[3]);
+                    if (!isStartTime) {
+                        M_this.startTime();
+                        M_this.isStartTime = true;
+                    } else {
+                        M_this.TimeCancles();
+                        M_this.startTime();
+                    }
+                }
+
+            }
+            if(msgArray[4].equals("01")){
+//                System.out.println( "第一次连接成功");
+//                System.out.println(msgArray[4]);
+                SK_CONNECTED="02";
+//                M_this.Send1(MachineSendType.msgStart);
+//
+//                String a = M_this.coinipSave.ReturForTime();
+//                    Log.e("dddddd",a);
+//                    System.out.println(a);
+//                String dataw= DATA_HOT+";"+Free_Not+";"+In_Game+";"+DATA_TIME+";"+SK_CONNECTED+";"+END_CODE;
+//
+//                    tcpManager.sendData(dataw);
+//
+            }else{
+//                System.out.println( "心疼和其他数据" );
+                SK_CONNECTED="02";
+//                    String a = M_this.coinipSave.ReturForTime();
+//                    Log.e("dddddd",a);
+//                    System.out.println( a );
+//                String dataw= DATA_HOT+";"+Free_Not+";"+In_Game+";"+DATA_TIME+";"+SK_CONNECTED+";"+END_CODE;
+//                M_this.server_socket.SendServer(dataw);
+            }
+        if(msgArray[5].equals("")){
+
+        }else{
+//            PackName=msgArray[5];
+        }
+//        }
+
+
+//        System.out.println(b);
+//        System.out.println(msgArray[5]);
+//        for (int i = 0; i < msgArray.length; i += 1) {
+//            switch (msgArray[i]) {
+//
+//            }
+
+//            System.out.println(msgArray[i]);
+//            if(i==0){
+//                if(msgArray[i].equals("01")){
+//
+//                }else {
+//
+//                }
+//            }
+//            if (b.equals("01")){
+////
+////                M_this.personM_t.setIn_Game("02");
+////                M_this.personM_t.setDATA_TIME(msgArray[3]);
+//                if(msgArray[1].equals("01")){
+////                    System.out.println( "我是免费模式" );
+//                    file_mode.changeForTime("0");
+////                    changeFerr();
+//
+//                }else{
+////                   System.out.println( "我是收费模式" );
+//
+//                }
+//                if(msgArray[2].equals("01")){
+////                    System.out.println( "我是没有打开游戏" );
+//
+//
+//                }else{
+////                    System.out.println( "我是打开游戏" );
+//                }
+////
+//                if(msgArray[3].equals("0")){
+////                    System.out.println( "没有时间" );
+//                }else{
+////                    System.out.println( "有时间" );
+////                    DATA_TIME=msgArray[3];
+////                     DATA_TIME=msgArray[3];
+//
+////                    System.out.println(msgArray[3]);
+//                }
+//                if(msgArray[4].equals("01")){
+//                    System.out.println( "第一次连接成功" );
+////                     SK_CONNECTED="01";
+////                M_this.personM_t.setSK_CONNECTED("01");
+////                    //
+//                }else{
+//                    System.out.println( "心疼和其他数据" );
+////                    SK_CONNECTED="02";
+////                   tcpManager.a(SK_CONNECTED);
+//                    //
+//                }
+//            }
+
+
+
+//        }
+    }
+
+     /**
      * 发送
      */
     /**
@@ -548,21 +853,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void pbsAppKeepAlive() {
+        try {
+            ToBServiceHelper.getInstance().getServiceBinder().pbsAppKeepAlive("com.example.androidclientpico",true,0);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * 刷新
      */
 
     private void serv() {
-        initPicoCast();
-        try {
-
-            String RtmpURL = ToBServiceHelper.getInstance().getServiceBinder().pbsPicoCastGetUrl(PBS_PICOCastUrlTypeEnum.RTMP_URL,1);
-            Log.d(TAG,RtmpURL);
-//            normal_url.setText("normal_url : " + url);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        Log.e(TAG, "================我已经执行了");
+//        initPicoCast();
+//        try {
+//
+//            String RtmpURL = ToBServiceHelper.getInstance().getServiceBinder().pbsPicoCastGetUrl(PBS_PICOCastUrlTypeEnum.RTMP_URL,1);
+//            Log.d(TAG,RtmpURL);
+////            normal_url.setText("normal_url : " + url);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//        Log.e(TAG, "================我已经执行了serv");
 //        videos
 
         //启动视频播放器播放视频
@@ -593,23 +905,23 @@ public class MainActivity extends AppCompatActivity {
 //        dialog.show();
     }
 
-    public void initPicoCast() {
-        try {
-            int result = ToBServiceHelper.getInstance().getServiceBinder().pbsPicoCastInit(callback, 0);
-            Log.i("PicoVRIoTService -1", "init_pico_cast : " + result);
-//            init_pico_cast.setText("init_pico_cast : " + result);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void initPicoCast() {
+//        try {
+//            int result = ToBServiceHelper.getInstance().getServiceBinder().pbsPicoCastInit(callback, 0);
+//            Log.i("PicoVRIoTService -1", "init_pico_cast : " + result);
+////            init_pico_cast.setText("init_pico_cast : " + result);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    private IIntCallback callback = new IIntCallback.Stub() {
-        @Override
-        public void callback(int result) throws RemoteException {
-//            runOnUiThread(() -> init_pico_cast.setText("init_pico_cast connect : " + result));
-            Log.i("PicoVRIoTService -1", "init_pico_cast connect callback : " + result);
-        }
-    };
+//    private IIntCallback callback = new IIntCallback.Stub() {
+//        @Override
+//        public void callback(int result) throws RemoteException {
+////            runOnUiThread(() -> init_pico_cast.setText("init_pico_cast connect : " + result));
+//            Log.i("PicoVRIoTService -1", "init_pico_cast connect callback : " + result);
+//        }
+//    };
 
 
     /**
@@ -647,19 +959,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void UDPstartC1(String  str,String ip) {
-        if (ip!=null){
-            udpTool.sendMessage(str,ip);
-        }else {
-//            Toast.makeText(MainActivity.this, "请输入对方ip和端口", Toast.LENGTH_SHORT).show();
-        }
-    }
-    private void UDPstartC2(String  str,String ip) {
-        if (ip!=null){
-            udpTool.sendMessage(str,ip);
-        }else {
-//            Toast.makeText(MainActivity.this, "请输入对方ip和端口", Toast.LENGTH_SHORT).show();
-        }
-    }    private void UDPstartC3(String  str,String ip) {
         if (ip!=null){
             udpTool.sendMessage(str,ip);
         }else {
@@ -780,6 +1079,7 @@ public class MainActivity extends AppCompatActivity {
             /*接收packname*/
             @Override
             public void senMsgPackageName(String string) {
+//                Log.e("ttttttttt",string);
                 PackName = string;
 //                String GetTime = mCache.getAsString("TimeCache");
                 if(file_mode.ferr().equals("")){
@@ -885,7 +1185,7 @@ private void starapps(){
                 }
                 SaveLanguage(Language);
             }
-
+              /*保存IP地址执行函数*/
             @Override
             public void sendMsgSetBackIP(String string) {
 //                Log.e(TAG,string);
@@ -989,6 +1289,7 @@ private void starapps(){
         rbHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                onViewClicked();
                 switchFragment(0);
             }
         });
@@ -1297,7 +1598,7 @@ private void starapps(){
      * 保存服务器IP
      */
     public void SaveServerIP(String view) {
-        Toast.makeText(this, getSerialNumber(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, getSerialNumber(), Toast.LENGTH_LONG).show();
         try {
             FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
             fos.write(view.toString().getBytes());
@@ -1330,7 +1631,7 @@ private void starapps(){
      * @return
      */
     private String GetServerIP() {
-        String IP = SERVER_IP;
+//        String IP = SERVER_IP;
         try {
             FileInputStream inStream = openFileInput(FILENAME);
             int len = 0;
@@ -1340,11 +1641,11 @@ private void starapps(){
                 StringBuilder.append(new String(buf, 0, len));
             }
             inStream.close();
-            IP = StringBuilder.toString();
+            SERVER_IP = StringBuilder.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return IP;
+        return SERVER_IP;
     }
     /**
      * 语言获取
@@ -1359,7 +1660,6 @@ private void starapps(){
             byte[] buf = new byte[1024];
             StringBuilder StringBuilder = new StringBuilder();
             while ((len = inStream.read(buf)) != -1) {
-                Log.e(TAG,"我是与一月又一月一月又一月呀呀呀"+len);
                 StringBuilder.append(new String(buf, 0, len));
             }
             inStream.close();
@@ -1394,32 +1694,32 @@ private void starapps(){
     /**
      * 获取安卓系统MAC
      */
-    public static String getmacAddress() {
-        String macAddress;
-        StringBuffer buf = new StringBuffer();
-        NetworkInterface networkInterface = null;
-        try {
-            networkInterface = NetworkInterface.getByName("eth1");
-            if (networkInterface == null) {
-                networkInterface = NetworkInterface.getByName("wlan0");
-            }
-            if (networkInterface == null) {
-                return "02:00:00:00:00:02";
-            }
-            byte[] addr = networkInterface.getHardwareAddress();
-            for (byte b : addr) {
-                buf.append(String.format("%02X:", b));
-            }
-            if (buf.length() > 0) {
-                buf.deleteCharAt(buf.length() - 1);
-            }
-            macAddress = buf.toString();
-        } catch (SocketException e) {
-            e.printStackTrace();
-            return "02:00:00:00:00:02";
-        }
-        return macAddress;
-    }
+//    public static String getmacAddress() {
+//        String macAddress;
+//        StringBuffer buf = new StringBuffer();
+//        NetworkInterface networkInterface = null;
+//        try {
+//            networkInterface = NetworkInterface.getByName("eth1");
+//            if (networkInterface == null) {
+//                networkInterface = NetworkInterface.getByName("wlan0");
+//            }
+//            if (networkInterface == null) {
+//                return "02:00:00:00:00:02";
+//            }
+//            byte[] addr = networkInterface.getHardwareAddress();
+//            for (byte b : addr) {
+//                buf.append(String.format("%02X:", b));
+//            }
+//            if (buf.length() > 0) {
+//                buf.deleteCharAt(buf.length() - 1);
+//            }
+//            macAddress = buf.toString();
+//        } catch (SocketException e) {
+//            e.printStackTrace();
+//            return "02:00:00:00:00:02";
+//        }
+//        return macAddress;
+//    }
 
     /**
      * 生成二维码并显示
@@ -1445,25 +1745,52 @@ private void starapps(){
         @Override
         public void onTick(long millisUntilFinished) {
 //            int totalSeconds = (int) (millisUntilFinished/1000);
-            long totalSeconds = millisUntilFinished / 1000;
-//            Log.d("tog","=================="+totalSeconds);
+            int totalSeconds = (int) (millisUntilFinished/1000);
+            Log.d("tog","=================="+totalSeconds);
 //            mCache.put("TimeCache", Integer.toString((int) totalSeconds));
+            M_this.DATA_TIME =Integer.toString(totalSeconds);
             long seconds = totalSeconds % 60;
             long minutes = (totalSeconds / 60) % 60;
             long hours = totalSeconds / 3600;
             String a = new Formatter().format("%02d:%02d:%02d", hours, minutes, seconds).toString();
 //            Log.d(TAG,"---------------时间倒计时---------"+a);
             DownGameTimes = new Formatter().format("%02d:%02d:%02d", hours, minutes, seconds).toString();
+            M_this.file_mode.changeForTime(String.valueOf(totalSeconds));
+            M_this.isTime=true;
             bf.HomeGetTime();
-
-
         }
-
         @Override
         public void onFinish() {
-            isTime=false;
-            if(!PackName.equals("")){
+            isStartTime = false;
+//            getJsonList();
+//            xml_time.setText("00:00:00");
+            DownGameTimes="00:00:00";
+            myCountDownTimer.cancel();
+            CountDownGameTimes=0;
+            bf.HomeGetTime();
+
+            M_this.file_mode.changeForTime("0");
+
+            M_this.isTime=false;
+
+            if(PackName.equals("")){
+
+//                Log.e("errrrr","我是空空的");
+
+//                M_this.PackName="com.example.androidclientpico";
+
+//                M_this.starapps(); // 打开游戏
+
+//                System.out.println("我是播放器");
+
+            }else {
+//                Log.e("errrrr","我不是空空的");
+//                Log.e("PackNamePackName",PackName);
                 Neo3KillApps(null, new String[]{PackName}, 0);
+
+
+//                PackName="com.example.androidclientpico";
+//                M_this.starapps(); // 打开游戏
             }
 
 //            finish();
@@ -1499,13 +1826,13 @@ private void starapps(){
      * pico专用杀死应用
      */
     public void Neo3KillApps(int[] pids, String[] packageNames, int ext) {
-//        Log.d(TAG,"-------------------------------关闭游戏的pids"+pids);
-//        Log.d(TAG,"-------------------------------关闭游戏的packageNames"+packageNames);
-//        Log.d(TAG,"-------------------------------关闭游戏的ext"+ext);
+        Log.d(TAG,"-------------------------------关闭游戏的pids"+pids);
+        Log.d(TAG,"-------------------------------关闭游戏的packageNames"+packageNames);
+        Log.d(TAG,"-------------------------------关闭游戏的ext"+ext);
         try {
             ToBServiceHelper.getInstance().getServiceBinder().pbsKillAppsByPidOrPackageName(pids, packageNames, 0);
         } catch (RemoteException e) {
-//            Log.d(TAG, "-------------------------------关闭游戏的" + e);
+            Log.d(TAG, "-------------------------------关闭游戏的" + e);
         }
     }
 
@@ -1535,9 +1862,9 @@ private void starapps(){
      * 握手
      */
     public void ShakeHands() {
-        if (!socketConnect.isRegister) {
-            SendMessage(String.valueOf(ServerMSGType.Register.value()), false);
-        }
+//        if (!socketConnect.isRegister) {
+//            SendMessage(String.valueOf(ServerMSGType.Register.value()), false);
+//        }
     }
     /** 当前状态 */
 //    private void CurrentStatus() {
@@ -1561,7 +1888,7 @@ private void starapps(){
      * 统一发送消息
      */
     public void SendMessage(String Number, boolean Status) {
-        socketConnect.SendToServer(Number + ";" + SN_Number + ";" + Status + "|");
+//        socketConnect.SendToServer(Number + ";" + SN_Number + ";" + Status + "|");
     }
 
 
@@ -1603,47 +1930,43 @@ private void starapps(){
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        Log.e(TAG, "onStart");
+//        Log.e(TAG, "onStart");
         /**
          * 发送udp
          */
-        UDPstartC1(C1_,UDPIP_);
-        UDPstartC2(C2_,UDPIP_);
-        UDPstartC3(C3_,UDPIP_);
+        UDPstartC1(C1,UDPIP_);
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        Log.e(TAG, "onPostResume");
-        UDPstartC1(C1_,UDPIP_);
-        UDPstartC2(C2_,UDPIP_);
-        UDPstartC3(C3_,UDPIP_);
+//        Log.e(TAG, "onPostResume");
+        UDPstartC1(C1,UDPIP_);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e(TAG, "onPause");
+//        Log.e(TAG, "onPause");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-        Log.e(TAG, "onStop");
+//        Log.e(TAG, "onStop");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.e(TAG, "onRestart");
+//        Log.e(TAG, "onRestart");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.e(TAG, "onDestroy");
+//        Log.e(TAG, "onDestroy");
 
     }
 
